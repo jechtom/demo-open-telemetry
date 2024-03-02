@@ -1,0 +1,75 @@
+version: '3'
+services:
+
+  otpl-debugger:
+    build: src/OTelDemo.OtplDebugger
+    ports:
+      - 4000:8080
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
+    ports:
+      - 5432:5432
+
+  backend:
+    build: src/OTelDemo.Backend
+    ports:
+      - 4006:8080
+    environment:
+      #- OTEL_DOTNET_AUTO_INSTRUMENTATION_ENABLED=false
+      - OTEL_DOTNET_AUTO_INSTRUMENTATION_ENABLED=true
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+      - OTEL_SERVICE_NAME=OtelDemo.Backend
+      - OTEL_DOTNET_AUTO_TRACES_ADDITIONAL_SOURCES=OtelDemo.*
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.95.0
+    env_file:
+      - ./src/otel-collector/.azure-config.env.local
+    volumes:
+      - ./src/otel-collector/otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml
+    ports:
+      - 1888:1888 # pprof extension
+      - 8888:8888 # Prometheus metrics exposed by the Collector
+      - 8889:8889 # Prometheus exporter metrics
+      - 13133:13133 # health_check extension
+      - 4317:4317 # OTLP gRPC receiver
+      - 4318:4318 # OTLP http receiver
+      - 55679:55679 # zpages extension
+
+  seq:
+    image: datalust/seq:2024.1
+    environment:
+      ACCEPT_EULA: Y
+    ports:
+      - 4002:80
+
+  ## Metrics
+
+  prometheus:
+    image: prom/prometheus:v2.50.1
+    command: 
+      --config.file=/etc/prometheus/prometheus.yml 
+      --storage.tsdb.path=/prometheus 
+      --web.console.libraries=/usr/share/prometheus/console_libraries 
+      --web.console.templates=/usr/share/prometheus/consoles 
+      --enable-feature=otlp-write-receiver
+    volumes:
+      - ./src/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - 4003:9090
+
+  ## Tracing
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - 4004:16686
+
+  zipkin:
+    image: openzipkin/zipkin:latest
+    ports:
+      - 4005:9411
