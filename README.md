@@ -48,3 +48,23 @@ dotnet run --project .\src\OTelDemo.Web\OTelDemo.Web.csproj
 # then explore backend service and otlp-debugger service logs
 # then explore: https://opentelemetry.io/ecosystem/registry
 ```
+
+# Demo C - OpenTelemetry Collector
+
+## Step 1 - Explore Collector Config
+
+Note: Start in dedicated terminal window.
+```
+# explore collector configs variants
+# explore: core: https://github.com/open-telemetry/opentelemetry-collector
+# explore: contrib: https://github.com/open-telemetry/opentelemetry-collector-contrib
+docker-compose up otel-collector
+```
+
+## Step 2 - Update and Run Demo App
+
+```
+# explore config, set OTLP endpoint to collector endpoint
+dotnet run --project .\src\OTelDemo.Web\OTelDemo.Web.csproj
+# then explore: https://localhost:7044
+```
