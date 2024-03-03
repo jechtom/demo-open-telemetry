@@ -55,7 +55,7 @@ dotnet run --project .\src\OTelDemo.Web\OTelDemo.Web.csproj
 
 Note: Start in dedicated terminal window.
 ```
-# explore collector configs variants
+# explore collector configs variants in src/otel-collector/
 # explore: core: https://github.com/open-telemetry/opentelemetry-collector
 # explore: contrib: https://github.com/open-telemetry/opentelemetry-collector-contrib
 docker-compose up otel-collector
@@ -67,4 +67,26 @@ docker-compose up otel-collector
 # explore config, set OTLP endpoint to collector endpoint
 dotnet run --project .\src\OTelDemo.Web\OTelDemo.Web.csproj
 # then explore: https://localhost:7044
+# then explore: seq at: http://localhost:4002/
+# then explore: jaeger at: http://localhost:4004/
+# then explore: zipkin at: http://localhost:4005/
+# then explore: prometheus at: http://localhost:4003/ 
+#  - try find custom metric: message_generated_count_total
+# then explore Azure Monitor - metrics, application map, logs (traces)
+```
+
+# Demo D - Zero Code Instrumentation
+
+## Step 1 - Update Docker Compose
+
+Enable auto instrumentation for _backend_ service.
+
+## Step 2 - Restart Backend
+
+```
+# stop running backend service Ctrl+C
+docker-compose up backend
+# then explore: https://localhost:7044
+# then explore new service in: seq at: http://localhost:4002/
+# then explore new service in: jaeger at: http://localhost:4004/
 ```
