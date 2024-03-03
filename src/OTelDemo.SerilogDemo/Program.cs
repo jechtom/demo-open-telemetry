@@ -1,11 +1,11 @@
-﻿using Serilog;
+using Serilog;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
     .WriteTo.Console()
-    .WriteTo.File("logs/myapp.txt", rollingInterval: RollingInterval.Day)
-    //.WriteTo.OpenTelemetry("http://localhost:4000") // connect to the OptlDebugger
-    .WriteTo.OpenTelemetry("http://localhost:4317") // connect to the OtelCollector
+    //.WriteTo.File("logs/myapp.txt", rollingInterval: RollingInterval.Day)
+    //.WriteTo.OpenTelemetry("http://localhost:4017") // connect to the OptlDebugger
+    //.WriteTo.OpenTelemetry("http://localhost:4317") // connect to the OtelCollector
     .CreateLogger();
 
 Log.Information("Hello, world!");

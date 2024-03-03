@@ -1,6 +1,6 @@
 using Google.Protobuf;
 
-namespace OTelDemo.OtplDebugger
+namespace OTelDemo.OtlpDebugger
 {
     public static class FormattingExtensions
     {

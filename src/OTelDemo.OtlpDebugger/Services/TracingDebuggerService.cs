@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using OpenTelemetry.Proto.Collector.Trace.V1;
 using System.Text;
 
-namespace OTelDemo.OtplDebugger.Services
+namespace OTelDemo.OtlpDebugger.Services
 {
     public class TracingDebuggerService : TraceService.TraceServiceBase
     {

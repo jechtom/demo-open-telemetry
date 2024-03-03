@@ -1,4 +1,4 @@
-using OTelDemo.OtplDebugger.Services;
+using OTelDemo.OtlpDebugger.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddGrpc();
@@ -9,6 +9,6 @@ app.MapGrpcService<LogsDebuggerService>();
 app.MapGrpcService<MetricsDebuggerService>();
 app.MapGrpcService<TracingDebuggerService>();
 
-app.MapGet("/", () => "This is OTPL debugger.");
+app.MapGet("/", () => "This is OTLP debugger.");
 
 app.Run();

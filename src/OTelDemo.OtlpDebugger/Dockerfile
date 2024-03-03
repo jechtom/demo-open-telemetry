@@ -9,16 +9,16 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY . OTelDemo.OtplDebugger/
-RUN dotnet restore "./OTelDemo.OtplDebugger/OTelDemo.OtplDebugger.csproj"
-WORKDIR "/src/OTelDemo.OtplDebugger"
-RUN dotnet build "./OTelDemo.OtplDebugger.csproj" -c $BUILD_CONFIGURATION -o /app/build
+COPY . OTelDemo.OtlpDebugger/
+RUN dotnet restore "./OTelDemo.OtlpDebugger/OTelDemo.OtlpDebugger.csproj"
+WORKDIR "/src/OTelDemo.OtlpDebugger"
+RUN dotnet build "./OTelDemo.OtlpDebugger.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./OTelDemo.OtplDebugger.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./OTelDemo.OtlpDebugger.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "OTelDemo.OtplDebugger.dll"]
+ENTRYPOINT ["dotnet", "OTelDemo.OtlpDebugger.dll"]

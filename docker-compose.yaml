@@ -1,29 +1,40 @@
 version: '3'
 services:
 
-  otpl-debugger:
-    build: src/OTelDemo.OtplDebugger
-    ports:
-      - 4000:8080
+# | Service Name         | URL Address                    |
+# |----------------------|--------------------------------|
+# | Frontend service     | https://localhost:7044         |
+# | Backend service      | http://localhost:4006/swagger  |
+# | My OTLP debugger     | http://localhost:4017          |
+# | Prometheus (metrics) | http://localhost:4003          |
+# | Jaeger (tracing)     | http://localhost:4004          |
+# | Zipkin (tracing)     | http://localhost:4005          |
+# | SEQ (logging)        | http://localhost:4002          |
 
-  db:
-    image: postgres:16
-    environment:
-      POSTGRES_PASSWORD: mysecretpassword
+  ## OpenTelemetry Debug Endpoint
+  ## docker-compose up otlp-debugger
+
+  otlp-debugger:
+    build: src/OTelDemo.OtlpDebugger
     ports:
-      - 5432:5432
+      - 4017:8080
+
+  # Backend services
 
   backend:
     build: src/OTelDemo.Backend
     ports:
       - 4006:8080
     environment:
-      #- OTEL_DOTNET_AUTO_INSTRUMENTATION_ENABLED=false
-      - OTEL_DOTNET_AUTO_INSTRUMENTATION_ENABLED=true
-      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
-      - OTEL_SERVICE_NAME=OtelDemo.Backend
-      - OTEL_DOTNET_AUTO_TRACES_ADDITIONAL_SOURCES=OtelDemo.*
+      - ASPNETCORE_ENVIRONMENT=Development
+      - OTEL_DOTNET_AUTO_INSTRUMENTATION_ENABLED=false
+      # - OTEL_DOTNET_AUTO_INSTRUMENTATION_ENABLED=true
+      # - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+      # - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+      # - OTEL_SERVICE_NAME=OtelDemo.Backend
+      # - OTEL_DOTNET_AUTO_TRACES_ADDITIONAL_SOURCES=OtelDemo.*
+
+  ## OpenTelemetry Collector
 
   otel-collector:
     image: otel/opentelemetry-collector-contrib:0.95.0
@@ -40,16 +51,17 @@ services:
       - 4318:4318 # OTLP http receiver
       - 55679:55679 # zpages extension
 
-  seq:
-    image: datalust/seq:2024.1
+  ## Other services
+  ## docker compose up db prometheus jaeger zipkin seq -d
+
+  db: # PostgreSQL demo app database
+    image: postgres:16
     environment:
-      ACCEPT_EULA: Y
+      POSTGRES_PASSWORD: mysecretpassword
     ports:
-      - 4002:80
+      - 5432:5432
 
-  ## Metrics
-
-  prometheus:
+  prometheus: # Prometheus metrics
     image: prom/prometheus:v2.50.1
     command: 
       --config.file=/etc/prometheus/prometheus.yml 
@@ -62,14 +74,19 @@ services:
     ports:
       - 4003:9090
 
-  ## Tracing
-
-  jaeger:
+  jaeger: # Jaeger tracing
     image: jaegertracing/all-in-one:latest
     ports:
       - 4004:16686
 
-  zipkin:
+  zipkin: # Zipkin tracing
     image: openzipkin/zipkin:latest
     ports:
       - 4005:9411
+
+  seq: # SEQ logging
+    image: datalust/seq:2024.1
+    environment:
+      ACCEPT_EULA: Y
+    ports:
+      - 4002:80

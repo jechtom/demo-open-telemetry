@@ -5,6 +5,7 @@ using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using OTelDemo.Web;
 using OTelDemo.Web.Services;
 using System.Diagnostics;
 
@@ -14,20 +15,22 @@ var builder = WebApplication.CreateBuilder(args);
 var resourceBuilder = ResourceBuilder.CreateDefault()
     .AddService(builder.Environment.ApplicationName);
 
-// define the OTPL endpoint URI
-var otplEndpoint = new Uri("http://localhost:4317");
+// define the OTLP endpoint URI
+var otlpEndpoint = new Uri("http://localhost:4017"); // connect to the OptlDebugger
+//var otlpEndpoint = new Uri("http://localhost:4317"); // connect to the OtelCollector
 
 // configure OpenTelemetry for logging
 builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 builder.Logging.AddOpenTelemetry(logging =>
 {
     logging.SetResourceBuilder(resourceBuilder)
         .AddOtlpExporter(c => {
-            c.Endpoint = otplEndpoint;
+            c.Endpoint = otlpEndpoint;
         });
 });
 
-// debug the activity sources
+// debug print: activity sources
 ActivitySource.AddActivityListener(new ActivityListener()
 {
     ShouldListenTo = (activitySource) =>
@@ -47,15 +50,21 @@ builder.Services
         c.AddRuntimeInstrumentation();
         c.AddAspNetCoreInstrumentation();
         c.AddHttpClientInstrumentation();
-        //c.AddEventCountersInstrumentation(c =>
+        c.AddMeter("OTelDemo.Web");
+
+        //c.AddEventCountersInstrumentation(c => // adds older EventCounter support
         //{
         //    c.AddEventSources("Microsoft.AspNetCore.Hosting");
         //    c.RefreshIntervalSecs = 5;
         //});
-        //c.AddMeter("my custom meter");
+
+        //c.AddAzureMonitorMetricExporter(o => o.ConnectionString = ".....");
+
+        c.AddPrometheusExporter();
+
         c.AddOtlpExporter(o =>
         {
-            o.Endpoint = otplEndpoint;
+            o.Endpoint = otlpEndpoint;
         });
     })
     .WithTracing(c =>
@@ -68,7 +77,7 @@ builder.Services
         c.AddHttpClientInstrumentation();
         c.AddOtlpExporter(o =>
         {
-            o.Endpoint = otplEndpoint;
+            o.Endpoint = otlpEndpoint;
         });
     });
 
@@ -106,6 +115,8 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+app.UseOpenTelemetryPrometheusScrapingEndpoint();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
