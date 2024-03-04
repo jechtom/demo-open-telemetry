@@ -3,12 +3,15 @@
 ## Prereq
 
 * Docker (with docker-compose) is installed and started.
+* .NET 8 SDK to build and run local apps
 
 # Demo A - Under the Hood
 
 ## Step 1 - Prepare Background Services
 
 ```
+docker compose pull
+docker compose build
 docker compose up db prometheus jaeger zipkin seq -d
 ```
 
