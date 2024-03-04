@@ -37,9 +37,7 @@ docker-compose up otlp-debugger
 dotnet run --project .\src\OTelDemo.SerilogDemo\OTelDemo.SerilogDemo.csproj
 
 # Enable OpenTelemetry sink in `.\src\OTelDemo.SerilogDemo\Program.cs`
-
-# Re-run and view debugger console
-dotnet run --project .\src\OTelDemo.SerilogDemo\OTelDemo.SerilogDemo.csproj
+# and re-run and view debugger console
 ```
 
 ## Demo B - .NET SDKs
