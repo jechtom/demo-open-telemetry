@@ -9,39 +9,7 @@ services:
     ports:
       - 4017:8080
 
-  # Backend services
-
-  backend:
-    build: src/OTelDemo.Backend
-    ports:
-      - 4006:8080
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - OTEL_DOTNET_AUTO_INSTRUMENTATION_ENABLED=false
-      # - OTEL_DOTNET_AUTO_INSTRUMENTATION_ENABLED=true
-      # - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
-      # - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
-      # - OTEL_SERVICE_NAME=OtelDemo.Backend
-      # - OTEL_DOTNET_AUTO_TRACES_ADDITIONAL_SOURCES=OtelDemo.*
-
-  ## OpenTelemetry Collector
-
-  otel-collector:
-    image: otel/opentelemetry-collector-contrib:0.95.0
-    env_file:
-      - ./src/otel-collector/.azure-config.env.local
-    volumes:
-      - ./src/otel-collector/otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml
-    ports:
-      - 1888:1888 # pprof extension
-      - 8888:8888 # Prometheus metrics exposed by the Collector
-      - 8889:8889 # Prometheus exporter metrics
-      - 13133:13133 # health_check extension
-      - 4317:4317 # OTLP gRPC receiver
-      - 4318:4318 # OTLP http receiver
-      - 55679:55679 # zpages extension
-
-  ## Other services
+  ## Background services
   ## docker compose up db prometheus jaeger zipkin seq -d
 
   db: # PostgreSQL demo app database
@@ -80,3 +48,36 @@ services:
       ACCEPT_EULA: Y
     ports:
       - 4002:80
+
+  # Backend services
+
+  backend:
+    build: src/OTelDemo.Backend
+    ports:
+      - 4006:8080
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - OTEL_DOTNET_AUTO_INSTRUMENTATION_ENABLED=false
+      # - OTEL_DOTNET_AUTO_INSTRUMENTATION_ENABLED=true
+      # - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+      # - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+      # - OTEL_SERVICE_NAME=OtelDemo.Backend
+      # - OTEL_DOTNET_AUTO_TRACES_ADDITIONAL_SOURCES=OtelDemo.*
+
+  ## OpenTelemetry Collector
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.95.0
+    env_file:
+      - ./src/otel-collector/.azure-config.env.local
+    volumes:
+      - ./src/otel-collector/otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml
+    ports:
+      - 1888:1888 # pprof extension
+      - 8888:8888 # Prometheus metrics exposed by the Collector
+      - 8889:8889 # Prometheus exporter metrics
+      - 13133:13133 # health_check extension
+      - 4317:4317 # OTLP gRPC receiver
+      - 4318:4318 # OTLP http receiver
+      - 55679:55679 # zpages extension
+

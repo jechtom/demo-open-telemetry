@@ -45,8 +45,9 @@ dotnet run --project .\src\OTelDemo.SerilogDemo\OTelDemo.SerilogDemo.csproj
 ## Demo B - .NET SDKs
 
 ```
-# start background services
+# explore start background services
 docker compose up db prometheus jaeger zipkin seq -d
+# explore for example Prometheus: http://localhost:4003
 
 # Start in dedicated terminal window.
 docker-compose up backend
