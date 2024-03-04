@@ -2,15 +2,15 @@
 
 ## Endpoints
 
-# | Service Name         | URL Address                    |
-# |----------------------|--------------------------------|
-# | Frontend service     | https://localhost:7044         |
-# | Backend service      | http://localhost:4006/swagger  |
-# | My OTLP debugger     | http://localhost:4017          |
-# | Prometheus (metrics) | http://localhost:4003          |
-# | Jaeger (tracing)     | http://localhost:4004          |
-# | Zipkin (tracing)     | http://localhost:4005          |
-# | SEQ (logging)        | http://localhost:4002          |
+| Service Name         | URL Address                    |
+|----------------------|--------------------------------|
+| Frontend service     | https://localhost:7044         |
+| Backend service      | http://localhost:4006/swagger  |
+| My OTLP debugger     | http://localhost:4017          |
+| Prometheus (metrics) | http://localhost:4003          |
+| Jaeger (tracing)     | http://localhost:4004          |
+| Zipkin (tracing)     | http://localhost:4005          |
+| SEQ (logging)        | http://localhost:4002          |
 
 ## Prereq
 
