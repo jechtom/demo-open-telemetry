@@ -42,7 +42,7 @@ dotnet run --project .\src\OTelDemo.SerilogDemo\OTelDemo.SerilogDemo.csproj
 dotnet run --project .\src\OTelDemo.SerilogDemo\OTelDemo.SerilogDemo.csproj
 ```
 
-# Demo B - .NET SDKs
+## Demo B - .NET SDKs
 
 ```
 # start background services
@@ -62,7 +62,7 @@ dotnet run --project .\src\OTelDemo.Web\OTelDemo.Web.csproj
 # then explore: https://opentelemetry.io/ecosystem/registry
 ```
 
-# Demo C - OpenTelemetry Collector
+## Demo C - OpenTelemetry Collector
 
 ```
 # explore collector configs variants in src/otel-collector/
@@ -84,7 +84,7 @@ dotnet run --project .\src\OTelDemo.Web\OTelDemo.Web.csproj
 # then explore Azure Monitor - metrics, application map, logs (traces)
 ```
 
-# Demo D - Zero Code Instrumentation
+## Demo D - Zero Code Instrumentation
 
 ```
 # in docker-compose.yaml enable auto instrumentation for _backend_
