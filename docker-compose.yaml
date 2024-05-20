@@ -20,7 +20,7 @@ services:
       - 5432:5432
 
   prometheus: # Prometheus metrics
-    image: prom/prometheus:v2.50.1
+    image: prom/prometheus:v2.52.0
     command: 
       --config.file=/etc/prometheus/prometheus.yml 
       --storage.tsdb.path=/prometheus 
@@ -43,7 +43,7 @@ services:
       - 4005:9411
 
   seq: # SEQ logging
-    image: datalust/seq:2024.1
+    image: datalust/seq:2024.3
     environment:
       ACCEPT_EULA: Y
     ports:
@@ -67,7 +67,7 @@ services:
   ## OpenTelemetry Collector
 
   otel-collector:
-    image: otel/opentelemetry-collector-contrib:0.95.0
+    image: otel/opentelemetry-collector-contrib:0.100.0
     env_file:
       - ./src/otel-collector/.azure-config.env.local
     volumes:

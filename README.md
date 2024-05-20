@@ -1,4 +1,6 @@
-# WUG Dev Day 2024-03-04 OpenTelemetry Demo
+# 2024 OpenTelemetry Demo
+
+By [@jechtom](https://github.com/jechtom)
 
 ## Endpoints
 
