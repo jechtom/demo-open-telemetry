@@ -1,38 +1,12 @@
 @page
-@model IndexModel
 @{
     ViewData["Title"] = "Home page";
 }
-@inject MessageGenerator messageGenerator;
-@inject WeatherApiClient weatherClient;
-@inject DemoDbContext dbContext;
 
 @inject ILogger<IndexModel> Logger
 @{
-    Logger.LogInformation("Index page visited");
+    Logger.LogInformation("Home page visited");
+    Logger.LogInformation("Today is {DayName}.", DateTime.Today.DayOfWeek);
 }
 
-<div class="text-center">
-    <h1 class="display-4">@await messageGenerator.GenerateMessageAsync()</h1>
-    <h2>Weather: @await weatherClient.GetForecastAsync()</h2>
-    <h2>Customers</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Age</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var customer in dbContext.People)
-            {
-                <tr>
-                    <td>@customer.Id</td>
-                    <td>@customer.Name</td>
-                    <td>@customer.Age</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+Hello world!

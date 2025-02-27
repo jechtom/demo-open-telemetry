@@ -30,3 +30,5 @@ packages/
 **/appsettings.local.json
 *.env.local
 data.local/
+
+node_modules/

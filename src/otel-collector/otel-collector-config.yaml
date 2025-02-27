@@ -41,8 +41,8 @@ exporters:
   debug:
     verbosity: detailed
 
-  azuremonitor:
-    connection_string: ${env:APPLICATIONINSIGHTS_CONNECTION_STRING}
+  # azuremonitor:
+  #   connection_string: ${env:APPLICATIONINSIGHTS_CONNECTION_STRING}
 
   prometheus:
     endpoint: 0.0.0.0:8889
@@ -68,12 +68,12 @@ service:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp/debug, otlphttp/seq, azuremonitor, otlp/jaeger, zipkin]
+      exporters: [otlp/debug, otlphttp/seq, otlp/jaeger, zipkin]
     metrics:
       receivers: [otlp, prometheus/own_metrics]
       processors: [batch]
-      exporters: [otlp/debug, prometheus, otlphttp/prometheus, azuremonitor]
+      exporters: [otlp/debug, prometheus, otlphttp/prometheus]
     logs:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp/debug, otlphttp/seq, azuremonitor]
+      exporters: [otlp/debug, otlphttp/seq]

@@ -1,16 +1,20 @@
-version: '3'
 services:
 
-  ## OpenTelemetry Debug Endpoint
-  ## docker-compose up otlp-debugger
+  ## Background services
+  ## docker compose up db prometheus jaeger zipkin seq aspire otlp-debugger backend -d
+  ## docker compose up otel-collector -d
+  ## docker compose up backend -d
+
+  aspire:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:9.0
+    ports:
+      - 18888:18888
+      - 4317:18889
 
   otlp-debugger:
     build: src/OTelDemo.OtlpDebugger
     ports:
       - 4017:8080
-
-  ## Background services
-  ## docker compose up db prometheus jaeger zipkin seq -d
 
   db: # PostgreSQL demo app database
     image: postgres:16
@@ -61,6 +65,7 @@ services:
       # - OTEL_DOTNET_AUTO_INSTRUMENTATION_ENABLED=true
       # - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
       # - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+      # ##- OTEL_EXPORTER_OTLP_ENDPOINT=http://aspire:18889
       # - OTEL_SERVICE_NAME=OtelDemo.Backend
       # - OTEL_DOTNET_AUTO_TRACES_ADDITIONAL_SOURCES=OtelDemo.*
 
@@ -68,8 +73,8 @@ services:
 
   otel-collector:
     image: otel/opentelemetry-collector-contrib:0.100.0
-    env_file:
-      - ./src/otel-collector/.azure-config.env.local
+    # env_file:
+    #   - ./src/otel-collector/.azure-config.env.local
     volumes:
       - ./src/otel-collector/otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml
     ports:

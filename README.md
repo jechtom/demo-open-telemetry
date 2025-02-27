@@ -1,4 +1,4 @@
-# 2024 OpenTelemetry Demo
+# 2025 OpenTelemetry Demo
 
 By [@jechtom](https://github.com/jechtom)
 
@@ -7,7 +7,7 @@ By [@jechtom](https://github.com/jechtom)
 | Service Name         | URL Address                    |
 |----------------------|--------------------------------|
 | Frontend service     | https://localhost:7044         |
-| Backend service      | http://localhost:4006/swagger  |
+| Backend service      | http://localhost:4006          |
 | My OTLP debugger     | http://localhost:4017          |
 | Prometheus (metrics) | http://localhost:4003          |
 | Jaeger (tracing)     | http://localhost:4004          |
@@ -17,7 +17,7 @@ By [@jechtom](https://github.com/jechtom)
 ## Prereq
 
 * Docker (with docker-compose) is installed and started.
-* .NET 8 SDK to build and run local apps
+* .NET 9 SDK to build and run local apps
 
 ## Prepare
 
@@ -25,74 +25,47 @@ By [@jechtom](https://github.com/jechtom)
 # pull and build images
 docker compose pull
 docker compose build
+
+cd src/nodejs-dice
+npm install
+npx ts-node --require ./instrumentation.ts app.ts
 ```
 
-## Demo A - Under the Hood
-
+## DEMO - .NET Aspire Dashboard + Jaeger, Zipkin, Prometheus, SEQ, …
 ```
-# Explore project: src/OTelDemo.OtlpDebugger 
-
-# In dedicated window run:
-docker-compose up otlp-debugger
-
-# Explore and run project:
-dotnet run --project .\src\OTelDemo.SerilogDemo\OTelDemo.SerilogDemo.csproj
-
-# Enable OpenTelemetry sink in `.\src\OTelDemo.SerilogDemo\Program.cs`
-# and re-run and view debugger console
+docker compose up db prometheus jaeger zipkin seq aspire otlp-debugger backend -d
+# show OTLP debugger
+# show different tools - Aspire dashboard, SEQ, Prometheus, Zipkin, Jaeger... - no data
 ```
 
-## Demo B - .NET SDKs
-
+## DEMO - OpenTelemetry .NET SDK
 ```
-# explore start background services
-docker compose up db prometheus jaeger zipkin seq -d
-# explore for example Prometheus: http://localhost:4003
-
-# Start in dedicated terminal window.
-docker-compose up backend
-
-# Explore: http://localhost:4006/swagger
-
-# Explore OTelDemo.Web project
-# - set OTLP endpoint to debugger endpoint
-dotnet run --project .\src\OTelDemo.Web\OTelDemo.Web.csproj
-
-# then explore: https://localhost:7044
-# then explore backend service and otlp-debugger logs
-# then explore: https://opentelemetry.io/ecosystem/registry
+# show & run OTelDemo.Web
+# enable telemetry
+# show .NET Aspire
+# switch connection to SEQ - show SEQ
 ```
 
-## Demo C - OpenTelemetry Collector
-
+## DEMO - Metrics
 ```
-# explore collector configs variants in src/otel-collector/
-# explore: core: https://github.com/open-telemetry/opentelemetry-collector
-# explore: contrib: https://github.com/open-telemetry/opentelemetry-collector-contrib
-
-# Start in dedicated terminal window.
-docker-compose up otel-collector
-
-# explore config, set OTLP endpoint to collector endpoint
-dotnet run --project .\src\OTelDemo.Web\OTelDemo.Web.csproj
-
-# then explore: https://localhost:7044
-# then explore: seq at: http://localhost:4002/
-# then explore: jaeger at: http://localhost:4004/
-# then explore: zipkin at: http://localhost:4005/
-# then explore: prometheus at: http://localhost:4003/ 
-#  - try find custom metric: message_generated_count_total
-# then explore Azure Monitor - metrics, application map, logs (traces)
+# explore metrics in Aspire
+# redirect to Prometheus, show metrics in Prometheus
 ```
 
-## Demo D - Zero Code Instrumentation
-
+## DEMO - OpenTelemetry Collector
 ```
+# show config and run otel-collector
+# show registry (collector): https://opentelemetry.io/ecosystem/registry/?language=collector 
+# stop Aspire (same port in use)
+docker compose up otel-collector -d
+# run web
+# -- show trace and logs over all systems (SEQ, Jaeger, Zipkin)
+```
+
+## DEMO - Zero Code Instrumentation
+```
+# show empty missing tracing and logging from OTelDemo.Backend
 # in docker-compose.yaml enable auto instrumentation for _backend_
-
-# stop running backend service Ctrl+C
-docker-compose up backend
-# then explore: https://localhost:7044
-# then explore new service in: seq at: http://localhost:4002/
-# then explore new service in: jaeger at: http://localhost:4004/
+# delete and recreate backend
+# repeat frontend request and inspect new trace
 ```

@@ -1,6 +1,7 @@
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry.Proto.Collector.Metrics.V1;
+using System.Diagnostics.Metrics;
 using System.Text;
 
 namespace OTelDemo.OtlpDebugger.Services
@@ -16,30 +17,8 @@ namespace OTelDemo.OtlpDebugger.Services
 
         public override Task<ExportMetricsServiceResponse> Export(ExportMetricsServiceRequest request, ServerCallContext context)
         {
-            StringBuilder sb = new();
-            foreach (var metric in request.ResourceMetrics)
-            {
-                //sb.AppendLine($"Got metrics!");
-
-                // collect resource attributes (e.g. service name, environment, etc.)
-                foreach (var atr in metric.Resource.Attributes)
-                {
-                    //sb.AppendLine($"- {atr.Key}: {atr.Value.StringValue}");
-                }
-
-                // collect metric data (e.g. metric name, value, etc.)
-                foreach (var data in metric.ScopeMetrics)
-                {
-                    foreach (var metricData in data.Metrics)
-                    {
-                        //sb.AppendLine($"- Metric(s):");
-                        sb.AppendLine($"Metric: [{metricData.DataCase}] {metricData.Name}");
-                    }
-                }
-            }
-
-            logger.LogInformation(sb.ToString());
-
+            int count = request.ResourceMetrics.Sum(rl => rl.ScopeMetrics.Sum(s => s.Metrics.Count));
+            logger.LogInformation("Metrics received. Count: {Count}", count);
             return Task.FromResult(new ExportMetricsServiceResponse());
         }
     }
