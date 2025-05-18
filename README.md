@@ -13,6 +13,7 @@ By [@jechtom](https://github.com/jechtom)
 | Jaeger (tracing)     | http://localhost:4004          |
 | Zipkin (tracing)     | http://localhost:4005          |
 | SEQ (logging)        | http://localhost:4002          |
+| Aspire dashboard     | http://localhost:18888         |
 
 ## Prereq
 
@@ -42,8 +43,8 @@ docker compose up db prometheus jaeger zipkin seq aspire otlp-debugger backend -
 ```
 # show & run OTelDemo.Web
 # enable telemetry
-# show .NET Aspire
-# switch connection to SEQ - show SEQ
+# show .NET Aspire (logs, metrics, tracing)
+# switch connection to SEQ - show SEQ (logs, tracing)
 ```
 
 ## DEMO - Metrics

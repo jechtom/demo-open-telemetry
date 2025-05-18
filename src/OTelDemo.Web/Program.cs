@@ -42,6 +42,7 @@ builder.Logging.AddConsole();
 
 
 builder.Services.AddScoped<MessageGenerator>();
+builder.Services.AddScoped<AnimalCounterService>();
 
 builder.Services.AddHttpClient<WeatherApiClient>(c =>
 {

@@ -1,4 +1,8 @@
 @using System.Diagnostics
+@inject AnimalCounterService animalEmojiService;
+@{
+    animalEmojiService.IncrementAnimalEmoji();
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>

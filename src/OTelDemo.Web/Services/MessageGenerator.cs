@@ -7,6 +7,7 @@ namespace OTelDemo.Web.Services
     public class MessageGenerator
     {
         static Counter<int> generatedMessagesCounter = ObservabilitySource.Meter.CreateCounter<int>("message.generated.count");
+
         private readonly ILogger<MessageGenerator> logger;
 
         public MessageGenerator(ILogger<MessageGenerator> logger)
