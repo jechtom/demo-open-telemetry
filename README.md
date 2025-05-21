@@ -32,14 +32,17 @@ npm install
 npx ts-node --require ./instrumentation.ts app.ts
 ```
 
-## DEMO - .NET Aspire Dashboard + Jaeger, Zipkin, Prometheus, SEQ, …
+## DEMO - Examples of Backends Supporting OpenTelemetry Protocol (OTLP)
+
+.NET Aspire Dashboard + Jaeger, Zipkin, Prometheus, SEQ, …
+
 ```
 docker compose up db prometheus jaeger zipkin seq aspire otlp-debugger backend -d
 # show OTLP debugger
 # show different tools - Aspire dashboard, SEQ, Prometheus, Zipkin, Jaeger... - no data
 ```
 
-## DEMO - OpenTelemetry .NET SDK
+## DEMO - OpenTelemetry .NET SDK - Logs, Traces
 ```
 # show & run OTelDemo.Web
 # enable telemetry
