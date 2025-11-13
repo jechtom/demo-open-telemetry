@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OTelDemo.OtlpDebugger", "OTelDemo.OtlpDebugger\OTelDemo.OtlpDebugger.csproj", "{6B6FF6BD-CD26-43CD-AF63-7D09FCFB85D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OTelDemo.OtlpDebugger", "Debugger\OTelDemo.OtlpDebugger.csproj", "{6B6FF6BD-CD26-43CD-AF63-7D09FCFB85D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTelDemo.Web", "OTelDemo.Web\OTelDemo.Web.csproj", "{BDCE5794-A958-486E-A303-4C5943CE06C2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTelDemo.Web", "Frontend\OTelDemo.Web.csproj", "{BDCE5794-A958-486E-A303-4C5943CE06C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTelDemo.Backend", "OTelDemo.Backend\OTelDemo.Backend.csproj", "{7111AC01-DD5B-461C-A010-224ED621CED7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTelDemo.Backend", "OrderService\OTelDemo.Backend.csproj", "{7111AC01-DD5B-461C-A010-224ED621CED7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

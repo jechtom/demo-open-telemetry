@@ -1,0 +1,39 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Overview";
+}
+@inject MessageGenerator messageGenerator;
+@inject OrderApiClient orderApiClient;
+@inject DiceClient diceClient;
+@inject DemoDbContext dbContext;
+
+@inject ILogger<IndexModel> Logger
+@{
+    Logger.LogInformation("Page visited");
+    await orderApiClient.ProcessOrderAsync();
+    await orderApiClient.ProcessOrderAsync();
+}
+<h2>💭 Message: @await messageGenerator.GenerateMessageAsync()</h2>
+<h2>🎲 Dice Service: @await diceClient.RollTheDice()</h2>
+<h2>🧺 Order Service: Order has been processed successfully.</h2>
+<h2>📁 Database: Query result:</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Age</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var customer in dbContext.People)
+        {
+            <tr>
+                <td>@customer.Id</td>
+                <td>@customer.Name</td>
+                <td>@customer.Age</td>
+            </tr>
+        }
+    </tbody>
+</table>

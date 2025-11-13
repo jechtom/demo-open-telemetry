@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Main-Class: com.example.catalog.CatalogServer
+Class-Path: jackson-databind-2.18.2.jar jackson-core-2.18.2.jar jackson-annotations-2.18.2.jar
+Created-By: Maven
+Build-Jdk: 25
+Implementation-Title: Catalog Service
+Implementation-Version: 1.0-SNAPSHOT
+Implementation-Vendor: com.example

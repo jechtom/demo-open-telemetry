@@ -1,20 +1,7 @@
 services:
 
-  ## Background services
-  ## docker compose up db prometheus jaeger zipkin seq aspire otlp-debugger backend -d
-  ## docker compose up otel-collector -d
-  ## docker compose up backend -d
-
-  aspire:
-    image: mcr.microsoft.com/dotnet/aspire-dashboard:9.0
-    ports:
-      - 18888:18888
-      - 4317:18889
-
-  otlp-debugger:
-    build: src/OTelDemo.OtlpDebugger
-    ports:
-      - 4017:8080
+  ###### APPLICATION SERVICES ######
+  ## docker-compose up db dice-service order-service frontend --build -d
 
   db: # PostgreSQL demo app database
     image: postgres:16
@@ -23,8 +10,66 @@ services:
     ports:
       - 5432:5432
 
+  dice-service:
+    build: src/DiceService
+    ports:
+      - 4010:8080
+    environment:
+      - OTEL_ENDPOINT=http://debugger:8080
+      #- OTEL_ENDPOINT=http://aspire:18889
+      #- OTEL_ENDPOINT=http://otel-collector:4317
+
+  catalog-service:
+    build: src/CatalogService
+    ports:
+      - 4009:8080
+
+  order-service:
+    build: src/OrderService
+    ports:
+      - 4006:8080
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - OTEL_DOTNET_AUTO_INSTRUMENTATION_ENABLED=false
+      #- OTEL_DOTNET_AUTO_INSTRUMENTATION_ENABLED=true
+      #- OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+      #- OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+      #- OTEL_SERVICE_NAME=OrderService
+      #- OTEL_DOTNET_AUTO_TRACES_ADDITIONAL_SOURCES=OtelDemo.*
+
+  frontend:
+    build: src/Frontend
+    ports:
+      - 4000:8080
+    environment:
+      - OTEL_GRPC_ENDPOINT=http://debugger:8080
+      #- OTEL_GRPC_ENDPOINT=http://aspire:18889
+      #- OTEL_HTTP_ENDPOINT=http://prometheus:9090/api/v1/otlp
+      #- OTEL_GRPC_ENDPOINT=http://otel-collector:4317
+    depends_on: 
+      - db
+      - dice-service
+      - order-service
+      #- catalog-service
+
+  ###### TELEMETRY BACKENDS & TOOLS ######
+  ## docker compose up aspire debugger prometheus jaeger zipkin seq loki grafana -d
+
+  aspire:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:9.3
+    ports:
+      - 18888:18888
+      #- 4317:18889
+    environment:
+      - DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS=true
+
+  debugger:
+    build: src/Debugger
+    ports:
+      - 4017:8080
+
   prometheus: # Prometheus metrics
-    image: prom/prometheus:v3.4.0
+    image: prom/prometheus:v3.7.3
     command: 
       --config.file=/etc/prometheus/prometheus.yml 
       --storage.tsdb.path=/prometheus 
@@ -47,32 +92,27 @@ services:
       - 4005:9411
 
   seq: # SEQ logging
-    image: datalust/seq:2024.3
+    image: datalust/seq:2025.2
     environment:
       ACCEPT_EULA: Y
+      SEQ_FIRSTRUN_NOAUTHENTICATION: true
     ports:
       - 4002:80
 
-  # Backend services
-
-  backend:
-    build: src/OTelDemo.Backend
+  loki: # loki logging
+    image: grafana/loki:3.5
     ports:
-      - 4006:8080
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - OTEL_DOTNET_AUTO_INSTRUMENTATION_ENABLED=false
-      # - OTEL_DOTNET_AUTO_INSTRUMENTATION_ENABLED=true
-      # - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
-      # - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
-      # ##- OTEL_EXPORTER_OTLP_ENDPOINT=http://aspire:18889
-      # - OTEL_SERVICE_NAME=OtelDemo.Backend
-      # - OTEL_DOTNET_AUTO_TRACES_ADDITIONAL_SOURCES=OtelDemo.*
+      - 4007:3100
+
+  grafana: # loki logging
+    image: grafana/grafana:12.4.0-19263646129
+    ports:
+      - 4008:3000
 
   ## OpenTelemetry Collector
 
   otel-collector:
-    image: otel/opentelemetry-collector-contrib:0.126.0
+    image: otel/opentelemetry-collector-contrib:0.139.0
     # env_file:
     #   - ./src/otel-collector/.azure-config.env.local
     volumes:

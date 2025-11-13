@@ -1,0 +1,38 @@
+@using System.Diagnostics
+@inject AnimalCounterService animalEmojiService;
+@{
+    animalEmojiService.IncrementAnimalEmoji();
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Frontend</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="container">
+                <a class="brand" href="/">Frontend Demo</a>
+                <ul class="nav-links">
+                    <li><a href="/">Home</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main>
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer>
+        <div class="container">
+            Frontend | trace @Activity.Current?.TraceId
+        </div>
+    </footer>
+</body>
+</html>
